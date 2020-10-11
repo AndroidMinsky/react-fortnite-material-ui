@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useLocation,
+} from "react-router-dom";
 
-function App() {
+import Home from "./components/Home";
+import Items from "./components/Items";
+import ItemView from "./components/ItemView";
+import Modal from "./components/Modal";
+import Navbar from "./components/Navbar";
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <ModalSwitch />
+    </Router>
   );
 }
 
-export default App;
+function ModalSwitch() {
+  let location = useLocation();
+  let background = location.state && location.state.background;
+
+  return (
+    <div>
+      <Switch location={background || location}>
+        <Route exact path="/" children={<Home />} />
+        <Route path="/items" children={<Items />} />
+        <Route path="/item/:id" children={<ItemView />} />
+      </Switch>
+
+      {background && <Route path="/item/:id" children={<Modal />} />}
+    </div>
+  );
+}
